@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addMovieToList,
   createListMovie,
   getAllList,
   getMoviesOfList,
@@ -7,7 +8,12 @@ import {
 
 const router = express.Router();
 
+//POST
+
 router.post("/create", createListMovie);
+router.post("/:listId/add", addMovieToList);
+
+//GET
 
 router.get("/get-all", getAllList);
 

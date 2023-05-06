@@ -44,4 +44,19 @@ const getMovieById = async (req, res) => {
   }
 };
 
-export { createMovie, randomMovies, getAllMovies, getMovieById };
+const getMovieIsSeries = async (req, res) => {
+  try {
+    const movies = await Movie.find({ isSeries: true });
+    return res.status(200).json(movies);
+  } catch (error) {
+    res.status(401).json(error);
+  }
+};
+
+export {
+  createMovie,
+  randomMovies,
+  getAllMovies,
+  getMovieById,
+  getMovieIsSeries,
+};

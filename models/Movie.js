@@ -12,6 +12,12 @@ const MovieSchema = new mongoose.Schema(
     genre: { type: String },
     isShown: { type: String, default: "2023" },
     isSeries: { type: Boolean, default: false },
+    duration: {
+      type: String,
+      required: () => !this.isSeries,
+    },
+    totalEpisodes: { type: Number, required: () => this.isSeries },
+    lists: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }],
   },
   { timestamps: true }
 );

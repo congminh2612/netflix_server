@@ -4,12 +4,7 @@ import jwt from "jsonwebtoken";
 import { generateAccessToken, generateRefreshToken } from "./jwtService.js";
 import clientRedis from "../../db/connectRedis.js";
 
-let refreshTokens = [];
 const register = async (req, res) => {
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With, content-type"
-  );
   const userCheckEmail = await User.findOne({
     email: req.body.email,
   });
@@ -54,13 +49,14 @@ const login = async (req, res) => {
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
-
-    await clientRedis.set(user._id.toString(), refreshToken);
-
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: false,
+      path: "/",
+      sameSite: "strict",
     });
+
+    await clientRedis.set(user._id.toString(), refreshToken);
 
     const { password, ...info } = user._doc;
     return res.status(200).json({ ...info, accessToken });
@@ -73,7 +69,7 @@ const logout = async (req, res) => {
   const token = req.cookies.refreshToken;
   res.clearCookie("refreshToken");
   await clientRedis.del(token);
-  res.status(201).json("logout!");
+  return res.status(201).json("logout!");
 };
 
 const reqRefreshToken = async (req, res) => {
@@ -97,10 +93,11 @@ const reqRefreshToken = async (req, res) => {
           const newRefreshToken = generateRefreshToken(user);
 
           await clientRedis.set(user._id, newRefreshToken);
-          res.cookie("refreshToken", newRefreshToken, {
+          res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: false,
             path: "/",
+            sameSite: "strict",
           });
 
           res.status(201).json({ newAccessToken, newRefreshToken });

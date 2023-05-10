@@ -1,3 +1,7 @@
+import express from "express";
+import dotenv from "dotenv";
+import { uploadFile } from "../controllers/movies/uploadMovie.js";
+
 import {
   createEpisode,
   getAllEpisode,
@@ -9,14 +13,19 @@ import {
   getMovieIsSeries,
   randomMovies,
 } from "../controllers/movies/movieController.js";
-import express from "express";
+import verifyToken from "../middleware/verifyToken.js";
+
+dotenv.config();
 
 const router = express.Router();
 
 //POST
 
 router.post("/create", createMovie);
-router.post("/episode/:movieId/create", createEpisode);
+router.post("/episode/:movieId/create", verifyToken, createEpisode);
+
+//upload file to google driver and take link driver to save db
+router.post("/upload", uploadFile);
 
 //GET
 router.get("/random", randomMovies);

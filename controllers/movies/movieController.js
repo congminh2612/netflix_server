@@ -37,7 +37,7 @@ const getAllMovies = async (req, res) => {
 const getMovieById = async (req, res) => {
   try {
     const id = req.params.id;
-    const movie = await Movie.findById(id);
+    const movie = await Movie.findById(id).populate("episodes");
     return res.status(200).json(movie);
   } catch (error) {
     return res.status(401).json("movie not found");

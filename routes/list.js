@@ -5,6 +5,7 @@ import {
   getAllList,
   getMoviesOfList,
 } from "../controllers/list/listController.js";
+import verifyToken from "../middleware/verifyToken.js";
 
 const router = express.Router();
 

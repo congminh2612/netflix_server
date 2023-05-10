@@ -17,6 +17,7 @@ const MovieSchema = new mongoose.Schema(
       required: () => !this.isSeries,
     },
     totalEpisodes: { type: Number, required: () => this.isSeries },
+    episodes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Episode" }],
     lists: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }],
   },
   { timestamps: true }
